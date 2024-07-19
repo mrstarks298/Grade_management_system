@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professor Dashboard - Sitare University</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="static/styles_professor.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+            </a>
+            <nav>
+                <ul>
+                    <li><button id="notificationToggle"><i class='bx bx-bell'></i></button></li>
+                    <li><button id="darkModeToggle"><i class='bx bx-moon'></i></button></li>
+                    <li><a href="{{ url_for('logout') }}" class="logout"><i class='bx bx-log-out icon'></i>Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <h3><i class='bx bx-cloud-upload'></i> Uploaded Grades:</h3>
+            <div class="upload-buttons-container">
+                {% for upload in uploads %}
+                <div class="upload-row">
+                    <button onclick="displayGrades('{{ upload.id }}')">
+                        {{ upload.filename }} 
+                        ({{ upload.timestamp.strftime('%Y-%m-%d %H:%M:%S') }})
+                    </button>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="sidebar-toggle" id="sidebarToggle">
+            <i class='bx bx-chevron-left'></i>
+        </div>
+        
+        <div class="content">
+            <h1 class="welcome-message">
+                <i class='bx bx-user-circle' style='font-size: 2rem;'></i> 
+                Welcome, {{ session.user.full_name }} 
+                <span style='font-size: 2rem;'>🎓</span>
+            </h1>
+
+            <div class="csv-instructions">
+                <h3><i class='bx bx-spreadsheet'></i> CSV Format Instructions:</h3>
+                <p>Please ensure your CSV file follows the format below:</p>
+                <pre>email,course_name,semester,semester_number,faculty_name,faculty_email,assessment_type,score,out_of,enrolled_students
+su-23040@sitare.org,MFC,Spring,3,Dr. Kushal Shah,kushal@sitare.org,Surprise Test,70,100,99
+su-23041@sitare.org,CS108,fall,1,Dr. Amit Singhal,amit@sitare.org,EndTerm,80,100,45</pre>
+            </div>
+            
+            <form method="post" enctype="multipart/form-data" class="upload-form">
+                <label for="file"><i class='bx bx-upload'></i> Upload CSV of Grades:</label>
+                <input type="file" id="file" name="file" accept=".csv">
+                <button type="submit"><i class='bx bx-cloud-upload'></i> Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="static\professor_js.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitare University - Grades Management System</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Boxicons CSS -->
+    <link href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="static/styles_index.css" rel="stylesheet">
+    <style>
+        :root {
+            --secondary-color: #dddddd;
+        }
+
+        body {
+            font-family: 'Arial, sans-serif';
+        }
+
+        .navbar {
+            background-color: var(--secondary-color);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 70px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand {
+            padding: 0;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+        }
+
+        .navbar-brand img {
+            width: 150px;
+        }
+
+        .navbar-nav .nav-link {
+            color: black;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: white;
+        }
+
+        .btn-black {
+            background-color: black;
+            color: white;
+            border: none;
+        }
+
+        .btn-black:hover {
+            background-color: #333;
+            color: white;
+        }
+
+        .footer {
+            background-color: #333;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <a class="navbar-brand" href="/">
+            <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="#about"><i class='bx bx-info-circle'></i> About</a>
+                </li>
+                {% if session.user %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('student_dashboard') }}"><i class='bx bx-user'></i> Dashboard</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        <div class="ml-auto">
+            {% if session.user %}
+                <a class="nav-link btn btn-black text-white" href="{{ url_for('logout') }}"><i class='bx bx-log-out'></i> Logout</a>
+            {% else %}
+                <a class="nav-link btn btn-black text-white" href="{{ url_for('google.login') }}"><i class='bx bx-log-in'></i> Login with Google</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Content Wrapper -->
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="text-center">
+            <div class="header-content mx-auto">
+                <h1>Sitare University</h1>
+                <p><i class='bx bxs-book-reader'></i> Grades Management System</p>
+            </div>
+        </header>
+
+        <!-- About Section -->
+        <section id="about" class="text-center">
+            <div class="container about-section">
+                <div class="row">
+                    <div class="col-lg-6 mb-4">
+                        <img src="/static/sitare_student_image.jpg" alt="Students">
+                    </div>
+                    <div class="col-lg-6">
+                        <h2><i class='bx bx-info-circle'></i> About Sitare University</h2>
+                        <p>At Sitare University, we are dedicated to providing top-notch education and fostering a community of excellence. Our Grades Management System ensures that students and professors have easy access to academic records and grading information.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        &copy; 2023 Sitare University. All rights reserved.
+    </footer>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

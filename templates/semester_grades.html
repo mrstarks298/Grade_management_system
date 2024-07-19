@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ semester }} Grades - Sitare University</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --secondary-color: #dddddd;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #ffffff;
+            --card-background: #ffffff;
+            --border-color: #131313;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            padding: 0px;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+        }
+
+        .logo img {
+            width: 150px;
+            margin-right: 0px;
+        }
+
+        .container {
+            margin-top: 100px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .table {
+            background-color: var(--card-background);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .table thead th {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: #12435a;
+            border-color: #12435a;
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --text-color: #e0e0e0;
+            --background-color: #1a1a1a;
+            --card-background: #2a2a2a;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .dark-mode header {
+            background-color: var(--secondary-color);
+        }
+
+        .dark-mode .table {
+            color: var(--text-color);
+            background-color: var(--card-background);
+        }
+
+        .dark-mode .table thead th {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .dark-mode .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .dark-mode .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <h1><i class='bx bx-book' style='color: var(--primary-color);'></i> {{ semester }} Grades</h1>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Your Performance</h5>
+                        <p class="card-text display-4">{{ better_than_count }} / {{ total_students }}</p>
+                        <p class="card-text">You're performing better than {{ better_than_count }} out of {{ total_students }} students</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Percentile</h5>
+                        <p class="card-text display-4">{{ "%.2f"|format((better_than_count / total_students) * 100) }}%</p>
+                        <p class="card-text">You're in the top {{ "%.2f"|format(100 - (better_than_count / total_students) * 100) }}% of the class</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col-md-8 offset-md-2">
+                <div class="chart-container" style="position: relative; height:40vh; width:100%">
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="chart-container" style="position: relative; height:40vh; width:100%">
+                    <canvas id="gradeDistribution"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <table id="gradesTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Course Name</th>
+                    <th>Assessment Type</th>
+                    <th>Score</th>
+                    <th>Max marks</th>
+                    <th>Percentage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades %}
+                <tr>
+                    <td>{{ grade.course_name }}</td>
+                    <td>{{ grade.assessment_type }}</td>
+                    <td>{{ grade.score }}</td>
+                    <td>{{ grade.out_of }}</td>
+                    <td>{{ "%.2f"|format(grade.percentage) }}%</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('student_dashboard') }}" class="btn btn-primary"><i class='bx bx-arrow-back'></i> Back to Dashboard</a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Initialize DataTable
+            var table = $('#gradesTable').DataTable({
+                pageLength: 10,
+                order: [[4, 'desc']] // Sort by percentage (descending) by default
+            });
+
+            // Create grade distribution chart
+            var ctx = document.getElementById('gradeDistribution').getContext('2d');
+            var gradeData = table.data().toArray();
+            
+            // Calculate percentages
+            var percentages = gradeData.map(row => parseFloat(row[4]));
+
+            // Determine bin size and number of bins
+            var binSize = 10; // 10% intervals
+            var numBins = 10; // 0-10%, 11-20%, ..., 91-100%
+
+            // Create bins and labels
+            var bins = new Array(numBins).fill(0);
+            var labels = [];
+            for (var i = 0; i < numBins; i++) {
+                var start = i * binSize;
+                var end = start + binSize;
+                labels.push(`${start}-${end}%`);
+            }
+
+            // Populate bins
+            percentages.forEach(percentage => {
+                var index = Math.min(Math.floor(percentage / binSize), numBins - 1);
+                bins[index]++;
+            });
+
+            var chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Grade Distribution',
+                        data: bins,
+                        backgroundColor: 'rgba(26, 95, 122, 0.8)',
+                        borderColor: 'rgba(26, 95, 122, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Assessments',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            },
+                            ticks: {
+                                precision: 0
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Percentage Score Range',
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                }
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Grade Distribution (Percentage)',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(tooltipItems) {
+                                    return `Score Range: ${tooltipItems[0].label}`;
+                                },
+                                label: function(context) {
+                                    return `Number of Assessments: ${context.raw}`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Create comparison chart
+            var comparisonCtx = document.getElementById('comparisonChart').getContext('2d');
+            var comparisonChart = new Chart(comparisonCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Better Than', 'Rest of Class'],
+                    datasets: [{
+                        data: [{{ better_than_count }}, {{ total_students - better_than_count }}],
+                        backgroundColor: [
+                            'rgba(26, 95, 122, 0.8)',
+                            'rgba(255, 159, 64, 0.8)'
+                        ],
+                        borderColor: [
+                            'rgba(26, 95, 122, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Your Performance Compared to Class',
+                            font: {
+                                size: 18,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 30
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    var label = context.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed !== undefined) {
+                                        label += context.parsed + ' students';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

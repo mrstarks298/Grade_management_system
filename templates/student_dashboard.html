@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Sitare University</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="static\styles_student.css">
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+            </a>
+            <nav>
+                <ul>
+                    <li><button id="notificationToggle"><i class='bx bx-bell'></i></button></li>
+                    <li><button id="darkModeToggle"><i class='bx bx-moon'></i></button></li>
+                    <li><a href="{{ url_for('logout') }}" class="logout"><i class='bx bx-log-out icon'></i>Logout</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    <div id="notificationPanel">
+        <div id="latestNotification"></div>
+    </div>
+    <div class="container">
+        <h1 class="welcome-message"><i class='bx bx-user-circle' style='font-size: 2rem;'></i> Welcome, {{ user.full_name }} <span style='font-size: 2rem;'>🎓</span></h1>
+        <h2><i class='bx bx-book' style='color: var(--primary-color);'></i> Your Semesters</h2>
+        <div id="grades-container">
+            <!-- Semester buttons will be dynamically inserted here -->
+        </div>
+
+        <div id="gradeCalculator">
+            <h2><i class='bx bx-calculator' style='color: var(--primary-color);'></i> Grade Calculator</h2>
+            <form id="calculatorForm">
+                <div class="form-group">
+                    <input type="number" id="currentGrade" placeholder="Current Grade" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="number" id="desiredGrade" placeholder="Desired Grade" class="form-control">
+                </div>
+                <div class="form-group">
+                    <input type="number" id="remainingWeight" placeholder="Remaining Weight (%)" class="form-control">
+                </div>
+                <button type="submit" class="btn btn-primary">Calculate</button>
+            </form>
+            <p id="calculationResult" class="mt-3"></p>
+        </div>
+    </div>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="static/student_js.js"></script>
+</body>
+</html>
