@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Grades - Sitare University</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.7.0/css/buttons.bootstrap4.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary-color: #1a5f7a;
+            --secondary-color: #dddddd;
+            --accent-color: #e74c3c;
+            --text-color: #333;
+            --background-color: #ffffff;
+            --card-background: #ffffff;
+            --border-color: #131313;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            background-color: var(--secondary-color);
+            color: #fff;
+            padding: 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 70px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            height: 100%;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #fff;
+            padding: 0px;
+            border-radius: 5px;
+            background-color: var(--secondary-color);
+        }
+
+        .logo img {
+            width: 150px;
+            margin-right: 0px;
+        }
+
+        .container {
+            margin-top: 100px;
+            padding: 20px;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 30px;
+        }
+
+        .table {
+            background-color: var(--card-background);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .table thead th {
+            background-color: var(--primary-color);
+            color: #fff;
+            border-color: var(--primary-color);
+        }
+
+        .dark-mode {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --text-color: #e0e0e0;
+            --background-color: #1a1a1a;
+            --card-background: #2a2a2a;
+            --border-color: #e0e0e0;
+        }
+
+        .dark-mode body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .dark-mode header {
+            background-color: var(--secondary-color);
+        }
+
+        .dark-mode .table {
+            color: var(--text-color);
+            background-color: var(--card-background);
+        }
+
+        .dark-mode .table thead th {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .filters {
+            margin-bottom: 20px;
+        }
+
+        .chart-container {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="#" class="logo">
+                <img src="https://sitare.org/univ/assets/WebP/Sitare-University-Logo.webp" alt="Sitare University Logo">
+            </a>
+        </div>
+    </header>
+    <div class="container">
+        <h1><i class='bx bx-list-ul' style='color: var(--primary-color);'></i> Student Grades</h1>
+
+        <div class="filters row">
+            <div class="col-md-3">
+                <select id="courseFilter" class="form-control">
+                    <option value="">All Courses</option>
+                    <!-- Populate with unique courses -->
+                </select>
+            </div>
+            <div class="col-md-3">
+                <select id="assessmentFilter" class="form-control">
+                    <option value="">All Assessments</option>
+                    <!-- Populate with unique assessment types -->
+                </select>
+            </div>
+            <div class="col-md-3">
+                <input type="number" id="minScore" class="form-control" placeholder="Min Score">
+            </div>
+            <div class="col-md-3">
+                <input type="number" id="maxScore" class="form-control" placeholder="Max Score">
+            </div>
+        </div>
+
+        <table id="gradesTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Email</th>
+                    <th>Course</th>
+                    <th>Assessment Type</th>
+                    <th>Score</th>
+                    <th>Max marks</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades %}
+                <tr>
+                    <td>{{ grade['student_name'] }}</td>
+                    <td>{{ grade['student_email'] }}</td>
+                    <td>{{ grade['course_name'] }}</td>
+                    <td>{{ grade['assessment_type'] }}</td>
+                    <td>{{ grade.score if grade.score is not none else grade.grade }}</td>
+                    <td>{{ grade.out_of }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="row">
+            <div class="col-md-8 offset-md-2">
+                <div class="chart-container" style="position: relative; height:50vh; width:100%">
+                    <canvas id="gradeDistribution"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <a href="{{ url_for('professor_dashboard') }}" class="btn btn-primary mt-3">
+            <i class='bx bx-arrow-back'></i> Back to Professor Dashboard
+        </a>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.bootstrap4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/1.7.0/js/buttons.print.min.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#gradesTable').DataTable({
+            pageLength: 10,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'csv', 'excel', 'pdf', 'print'
+            ]
+        });
+
+        // Populate filters
+        var courses = [...new Set(table.column(2).data().toArray())];
+        var assessments = [...new Set(table.column(3).data().toArray())];
+        
+        courses.forEach(course => {
+            $('#courseFilter').append(`<option value="${course}">${course}</option>`);
+        });
+        
+        assessments.forEach(assessment => {
+            $('#assessmentFilter').append(`<option value="${assessment}">${assessment}</option>`);
+        });
+
+        // Apply filters
+        $('#courseFilter, #assessmentFilter, #minScore, #maxScore').on('change', function() {
+            table.draw();
+        });
+
+        // Custom filtering function
+        $.fn.dataTable.ext.search.push(
+            function(settings, data, dataIndex) {
+                var course = $('#courseFilter').val();
+                var assessment = $('#assessmentFilter').val();
+                var min = parseInt($('#minScore').val(), 10);
+                var max = parseInt($('#maxScore').val(), 10);
+                var score = parseFloat(data[4]) || 0;
+
+                if (
+                    (course === "" || data[2] === course) &&
+                    (assessment === "" || data[3] === assessment) &&
+                    (isNaN(min) || score >= min) &&
+                    (isNaN(max) || score <= max)
+                ) {
+                    return true;
+                }
+                return false;
+            }
+        );
+
+        // Create grade distribution chart
+        var ctx = document.getElementById('gradeDistribution').getContext('2d');
+        var gradeData = table.data().toArray();
+        
+        // Extract scores and max marks
+        var scoreData = gradeData.map(row => ({
+            score: parseFloat(row[4]),
+            outOf: parseFloat(row[5])
+        })).filter(item => !isNaN(item.score) && !isNaN(item.outOf));
+
+        // Calculate percentage scores
+        var percentages = scoreData.map(item => (item.score / item.outOf) * 100);
+
+        // Determine bin size and number of bins
+        var binSize = 10; // 10% intervals
+        var numBins = 10; // 0-10%, 11-20%, ..., 91-100%
+
+        // Create bins and labels
+        var bins = new Array(numBins).fill(0);
+        var labels = [];
+        for (var i = 0; i < numBins; i++) {
+            var start = i * binSize;
+            var end = start + binSize;
+            labels.push(`${start}-${end}%`);
+        }
+
+        // Populate bins
+        percentages.forEach(percentage => {
+            var index = Math.min(Math.floor(percentage / binSize), numBins - 1);
+            bins[index]++;
+        });
+
+        var chart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Grade Distribution',
+                    data: bins,
+                    backgroundColor: 'rgba(54, 162, 235, 0.8)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Number of Students',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        },
+                        ticks: {
+                            precision: 0
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Percentage Score Range',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Grade Distribution (Percentage)',
+                        font: {
+                            size: 18,
+                            weight: 'bold'
+                        },
+                        padding: {
+                            top: 10,
+                            bottom: 30
+                        }
+                    },
+                    legend: {
+                        display: false
+                    },
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                return `Score Range: ${tooltipItems[0].label}`;
+                            },
+                            label: function(context) {
+                                return `Number of Students: ${context.raw}`;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Check if dark mode is enabled in local storage
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            // Update chart colors for dark mode
+            chart.data.datasets[0].backgroundColor = 'rgba(52, 152, 219, 0.8)';
+            chart.data.datasets[0].borderColor = 'rgba(52, 152, 219, 1)';
+            chart.update();
+        }
+    });
+    </script>
+</body>
+</html>
