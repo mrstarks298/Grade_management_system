@@ -1,0 +1,64 @@
+/* Custom styles */
+body {
+    background-color: #ffffff; /* White background */
+    color: #343a40; /* Dark text color */
+    height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Arial', sans-serif; /* Font family */
+}
+.navbar {
+    background-color: #dddd; /* White navbar background */
+    border-bottom: 1px solid #131313; /* Light gray border bottom */
+}
+.navbar-brand img {
+    width: 140px;  /* Adjust as necessary */
+}
+.content-wrapper {
+    flex: 1;
+    padding-top: 56px; /* to avoid navbar overlap */
+}
+.header-content {
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+.header-content h1 {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+.header-content p {
+    font-size: 1.5rem;
+}
+.about-section {
+    border-radius: 10px;
+    padding: 20px;
+}
+.about-section img {
+    max-width: 100%;
+    border-radius: 10px;
+}
+.footer {
+    background-color: #343a40; /* Dark background for footer */
+    color: #ffffff; /* White text color */
+    text-align: center;
+    padding: 10px;
+}
+@media (max-width: 768px) {
+    .header-content h1 {
+        font-size: 2.5rem;
+    }
+    .header-content p {
+        font-size: 1.2rem;
+    }
+}
+@media (max-width: 576px) {
+    .header-content h1 {
+        font-size: 2rem;
+    }
+    .header-content p {
+        font-size: 1rem;
+    }
+}

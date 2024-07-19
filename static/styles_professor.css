@@ -1,0 +1,298 @@
+:root {
+    --primary-color: #1a5f7a;
+    --secondary-color: #dddddd;
+    --accent-color: #e74c3c;
+    --text-color: #333;
+    --background-color: #ffffff;
+    --card-background: #ffffff;
+    --border-color: #131313;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+header {
+    background-color: var(--secondary-color);
+    color: #fff;
+    padding: 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    height: 70px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    height: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #fff;
+    padding: 0px;
+    border-radius: 5px;
+    background-color: var(--secondary-color);
+}
+
+.logo img {
+    width: 150px;
+    margin-right: 0px;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    align-items: center;
+}
+
+nav ul li {
+    margin-left: 15px;
+}
+
+nav ul li a, nav ul li button {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 4px;
+    display: inline-block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background-color 0.3s;
+}
+
+nav ul li a:hover, nav ul li button:hover {
+    background-color: rgba(255,255,255,0.1);
+}
+
+nav ul li a.logout {
+    background-color: var(--accent-color);
+    color: #fff;
+    font-size: 1rem;
+    padding: 10px 20px;
+}
+
+nav ul li a.logout:hover {
+    background-color: #c0392b;
+}
+
+.container {
+    margin-top: 80px;
+    padding: 20px;
+}
+
+.sidebar {
+    width: 250px;
+    background-color: var(--card-background);
+    padding: 20px;
+    border-right: 1px solid #dee2e6;
+    position: fixed;
+    top: 80px;
+    left: 0;
+    height: calc(100% - 80px);
+    overflow-y: auto;
+    transition: transform 0.3s;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar.active {
+    transform: translateX(-100%);
+}
+
+.sidebar h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+}
+
+.upload-buttons-container {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.upload-row {
+    margin-bottom: 15px;
+}
+
+.upload-row button {
+    width: 100%;
+    padding: 10px;
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color 0.3s;
+}
+
+.upload-row button:hover {
+    background-color: #12435a;
+}
+
+.content {
+    margin-left: 270px;
+    padding: 20px;
+    transition: margin-left 0.3s;
+}
+
+.welcome-message {
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    color: var(--text-color);
+}
+
+.csv-instructions {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.csv-instructions h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.csv-instructions pre {
+    background-color: #f8f9fa;
+    padding: 15px;
+    border-radius: 4px;
+    overflow-x: auto;
+    font-size: 0.9rem;
+}
+
+.upload-form {
+    background-color: var(--card-background);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.upload-form label {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+.upload-form input[type="file"] {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 4px;
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.upload-form button[type="submit"] {
+    background-color: var(--primary-color);
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.upload-form button[type="submit"]:hover {
+    background-color: #12435a;
+}
+
+.sidebar-toggle {
+    position: fixed;
+    top: 90px;
+    left: 260px;
+    background-color: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    font-size: 1.5rem;
+    color: #fff;
+    padding: 10px;
+    border-radius: 50%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: left 0.3s, transform 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-toggle.active {
+    left: 10px;
+    transform: rotate(180deg);
+}
+
+/* Dark mode styles */
+.dark-mode {
+    --primary-color: #3498db;
+    --secondary-color: #2c3e50;
+    --accent-color: #e74c3c;
+    --text-color: #e0e0e0;
+    --background-color: #1a1a1a;
+    --card-background: #2a2a2a;
+    --border-color: #e0e0e0;
+}
+
+.dark-mode .upload-row button {
+    background-color: #3498db;
+}
+
+.dark-mode .upload-row button:hover {
+    background-color: #1a5f7a;
+}
+
+.dark-mode .csv-instructions pre {
+    background-color: #2e2e2e;
+    color: var(--text-color);
+}
+
+.dark-mode input[type="file"] {
+    background-color: #3a3a3a;
+    border-color: #4a4a4a;
+    color: var(--text-color);
+}
+
+@media (max-width: 768px) {
+    .sidebar {
+        width: 100%;
+        transform: translateX(-100%);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .content {
+        margin-left: 0;
+    }
+    
+    .sidebar-toggle {
+        left: 10px;
+    }
+    
+    .sidebar-toggle.active {
+        left: calc(100% - 50px);
+    }
+}
